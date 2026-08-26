@@ -11,10 +11,14 @@ async function caricaDati() {
     document.getElementById('batteria_percento').textContent = data.batteria_percento ?? '--';
     document.getElementById('data_ora').textContent = data.data_ora ?? '--';
     document.getElementById('modalita').textContent = data.modalita ?? '--';
+
   } catch (e) {
-    console.error(e);
+    console.error("Errore:", e);
   }
 }
 
+// Carica subito i dati
 caricaDati();
-setInterval(caricaDati, 60000); // aggiorna ogni 60 secondi
+
+// Aggiorna ogni 60 secondi
+setInterval(caricaDati, 60000);
