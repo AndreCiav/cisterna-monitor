@@ -1,26 +1,43 @@
-!DOCTYPE html
-html lang=it
-head
-  meta charset=UTF-8
-  titleMonitor Cisterna Acquatitle
-  link rel=stylesheet href=style.css
-head
-body
-  h1Monitor Cisterna Acquah1
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitor Cisterna Acqua</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-  section id=dati-attuali
-    h2Dati attualih2
-    pstrongLivello acquastrong span id=livello_cm--span cm (span id=livello_percento--span %)p
-    pstrongBatteriastrong span id=batteria_volt--span V (span id=batteria_percento--span %)p
-    pstrongModalitàstrong span id=modalita--spanp
-    pstrongUltimo aggiornamentostrong span id=data_ora--spanp
-  section
+<body>
+  <h1>Monitor Cisterna Acqua</h1>
 
-  section id=storico
-    h2Storico letture (CSV)h2
-    pScarica il file a href=storico.csv target=_blankstorico.csvap
-  section
+  <section id="dati-attuali">
+    <h2>Dati attuali</h2>
 
-  script src=script.jsscript
-body
-html
+    <p><strong>Livello acqua:</strong> 
+      <span id="livello_cm">--</span> cm 
+      (<span id="livello_percento">--</span> %)
+    </p>
+
+    <p><strong>Batteria:</strong> 
+      <span id="batteria_volt">--</span> V 
+      (<span id="batteria_percento">--</span> %)
+    </p>
+
+    <p><strong>Modalità:</strong> 
+      <span id="modalita">--</span>
+    </p>
+
+    <p><strong>Ultimo aggiornamento:</strong> 
+      <span id="data_ora">--</span>
+    </p>
+  </section>
+
+  <section id="storico">
+    <h2>Storico letture</h2>
+    <p>Scarica il file CSV: 
+      <a href="storico.csv" target="_blank">storico.csv</a>
+    </p>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
