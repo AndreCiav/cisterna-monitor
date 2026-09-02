@@ -6,22 +6,20 @@ const $ = id => document.getElementById(id);
 
 async function githubGet(path) {
   const r = await fetch(`${API_BASE}/${path}?t=${Date.now()}`, {
-    headers: { "Accept": "application/vnd.github+json", "Authorization": `Bearer ${GITHUB_TOKEN}` }
+    headers: { 
+      "Accept": "application/vnd.github+json", 
+      "Authorization": `Bearer ${GITHUB_TOKEN}` 
+    }
   });
-  if (!r.ok) throw new Error(`GitHub GET ${r.status}`);
+  if (!r.ok) throw new Error(`GitHub GET ${path}: ${r.status}`);
   return r.json();
 }
 
 async function readJSON(path) {
+  // Legge tramite API o raw con bypass della cache
   const r = await fetch(`${RAW_BASE}/${path}?t=${Date.now()}`);
   if (!r.ok) throw new Error(`Lettura ${path}: ${r.status}`);
   return r.json();
-}
-
-function decodeBase64(base64) {
-  const binary = atob(base64.replace(/\n/g, ""));
-  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
 }
 
 function encodeBase64(text) {
@@ -56,7 +54,8 @@ function fmt(n, d=1) { return Number(n || 0).toFixed(d); }
 
 async function aggiornaDati() {
   try {
-    const d = await readJSON("github/data.json");
+    // CORRETTO: Percorso allineato all'ESP32 ("data.json")
+    const d = await readJSON("data.json");
     setText("acqua", `${fmt(d.percentualeAcqua)} %`);
     setText("altezza", `${fmt(d.altezzaAcqua)} cm`);
     setText("distanza", `${fmt(d.distanzaAcqua)} cm`);
@@ -66,6 +65,7 @@ async function aggiornaDati() {
     setText("modo", d.modalitaRisparmio ? "Risparmio energetico" : "Attivo");
     setText("ultimo", d.ultimoAggiornamento || "N/D");
     setText("prossimo", d.prossimoAggiornamento || "N/D");
+    
     const err = [];
     if (d.erroreUltrasuoni) err.push("Ultrasuoni");
     if (d.erroreBatteria) err.push("Batteria");
@@ -81,7 +81,8 @@ async function aggiornaDati() {
 
 async function caricaConfigurazione() {
   try {
-    const c = await readJSON("github/config.json");
+    // CORRETTO: Percorso allineato all'ESP32 ("config.json")
+    const c = await readJSON("config.json");
     $("s1").value = c.altezzaSensore;
     $("s2").value = c.altezzaCisterna;
     $("s3").value = c.lato1;
@@ -100,32 +101,56 @@ async function salvaConfig() {
     modalitaRisparmio: $("s5").checked,
     salvaStorico: $("s6").checked
   };
-  if (c.altezzaSensore < c.altezzaCisterna) return alert("L'altezza del sensore deve essere >= altezza della cisterna.");
+  
+  if (c.altezzaSensore < c.altezzaCisterna) {
+    return alert("L'altezza del sensore deve essere >= altezza della cisterna.");
+  }
+
   try {
-    await writeGitHubFile("github/config.json", JSON.stringify(c, null, 2), "Aggiornamento configurazione cisterna");
-    alert("Configurazione salvata. L'ESP32 la leggerà al prossimo controllo.");
+    // CORRETTO: Scrive su "config.json"
+    await writeGitHubFile("config.json", JSON.stringify(c, null, 2), "Aggiornamento configurazione cisterna");
+    alert("Configurazione salvata! L'ESP32 la leggerà al prossimo intervallo.");
     aggiornaDati();
-  } catch (e) { alert("Errore: " + e.message); }
+  } catch (e) { alert("Errore nel salvataggio: " + e.message); }
 }
 
 async function caricaStorico() {
   try {
-    const r = await fetch(`${RAW_BASE}/github/storico.csv?t=${Date.now()}`);
+    // CORRETTO: Percorso allineato ("storico.csv")
+    const r = await fetch(`${RAW_BASE}/storico.csv?t=${Date.now()}`);
     if (!r.ok) throw new Error("Storico non disponibile");
     const text = await r.text();
-    const lines = text.trim().split(/\r?\n/).slice(1);
+    
+    // Gestione righe vuote e pulizia
+    const lines = text.trim().split(/\r?\n/).filter(line => line.trim() !== "");
     const labels = [], values = [];
+    
     for (const line of lines) {
       const p = line.split(",");
-      if (p.length >= 4) { labels.push(p[0]); values.push(Number(p[3])); }
+      // Verifica che la riga contenga i valori numerici attendibili
+      if (p.length >= 4 && !isNaN(parseFloat(p[3]))) { 
+        labels.push(p[0].replace("T", " ").substring(0, 16)); // Formatta la data
+        values.push(Number(p[3])); 
+      }
     }
+    
     if (grafico) grafico.destroy();
     grafico = new Chart($("grafico"), {
       type: "line",
-      data: { labels, datasets: [{ label: "Livello acqua %", data: values, tension: 0.2 }] },
+      data: { 
+        labels, 
+        datasets: [{ 
+          label: "Livello acqua %", 
+          data: values, 
+          borderColor: "#007bcc",
+          backgroundColor: "rgba(0,123,204,0.1)",
+          fill: true,
+          tension: 0.2 
+        }] 
+      },
       options: { responsive: true, maintainAspectRatio: false }
     });
-  } catch (e) { setText("errori", e.message); }
+  } catch (e) { console.warn("Storico:", e.message); }
 }
 
 async function aggiornaTutto() {
@@ -134,6 +159,7 @@ async function aggiornaTutto() {
   await caricaStorico();
 }
 
+// Avvio
 aggiornaTutto();
 setInterval(aggiornaDati, 30000);
 setInterval(caricaStorico, 60000);
