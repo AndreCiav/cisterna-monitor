@@ -8,7 +8,7 @@
   "percentualeBatteria": 0,
   "ultimoAggiornamento": "03/09/2026 10:00:13",
   "prossimoAggiornamento": "2026-09-03T10:02:13+00:00",
-  "modalitaRisparmio": false,
+  "modalitaRisparmio": true,
   "salvaStorico": true,
   "erroreUltrasuoni": false,
   "erroreBatteria": true,
