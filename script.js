@@ -59,7 +59,6 @@ async function aggiornaDati() {
   }
 }
 
-
 async function caricaStorico() {
   try {
     const r = await fetch(`${RAW_BASE}/storico.csv?t=${Date.now()}`);
