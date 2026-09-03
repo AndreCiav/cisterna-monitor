@@ -28,7 +28,7 @@ async function aggiornaDati() {
   try {
     const d = await readJSON("data.json");
     
-    // Aggiornamento dei testi principali della cisterna e della batteria
+    // Aggiornamento dei testi principali
     setText("acqua", `${fmt(d.percentualeAcqua)} %`);
     setText("altezza", `${fmt(d.altezzaAcqua)} cm`);
     setText("distanza", `${fmt(d.distanzaAcqua)} cm`);
@@ -38,12 +38,6 @@ async function aggiornaDati() {
     setText("modo", d.modalitaRisparmio ? "Risparmio energetico" : "Attivo");
     setText("ultimo", d.ultimoAggiornamento || "N/D");
     setText("prossimo", d.prossimoAggiornamento || "N/D");
-    
-    // Riempimento automatico dei campi di configurazione in sola lettura (disabilitati)
-    if ($("s1")) $("s1").value = d.altezzaSensore !== undefined ? d.altezzaSensore : "";
-    if ($("s2")) $("s2").value = d.altezza !== undefined ? d.altezza : ""; // Corrisponde all'altezza utile della cisterna
-    if ($("s3")) $("s3").value = d.lato1 !== undefined ? d.lato1 : "";
-    if ($("s4")) $("s4").value = d.lato2 !== undefined ? d.lato2 : "";
     
     // Gestione degli errori di sistema
     const err = [];
