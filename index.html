@@ -58,7 +58,16 @@
     <p id="errori">--</p>
   </section>
 </main>
-
+  
+<script>
+  // Aggiorna tutti i dati (dati cisterna, configurazione e storico) ogni 60 secondi senza ricaricare la pagina
+  setInterval(function() {
+    if (typeof aggiornaTutto === 'function') {
+      aggiornaTutto();
+    }
+  }, 60000);
+</script>
+  
 <script src="config.js"></script>
 <script src="script.js"></script>
 </body>
