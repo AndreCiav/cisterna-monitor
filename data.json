@@ -1,16 +1,16 @@
 {
-  "distanzaAcqua": 0,
-  "altezzaAcqua": 0,
-  "percentualeAcqua": 0,
-  "litriAttuali": 0,
+  "distanzaAcqua": 66.44482,
+  "altezzaAcqua": 203.5552,
+  "percentualeAcqua": 81.42207,
+  "litriAttuali": 14248.86,
   "litriTotali": 17500,
-  "voltBatteria": 1.501077,
+  "voltBatteria": 0.775077,
   "percentualeBatteria": 0,
-  "ultimoAggiornamento": "03/09/2026 16:30:02",
+  "ultimoAggiornamento": "03/09/2026 16:30:03",
   "prossimoAggiornamento": "03/09/2026 17:00:00",
   "modalitaRisparmio": true,
   "salvaStorico": true,
-  "erroreUltrasuoni": true,
+  "erroreUltrasuoni": false,
   "erroreBatteria": true,
   "erroreNTP": false
 }
