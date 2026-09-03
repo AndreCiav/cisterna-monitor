@@ -79,7 +79,40 @@ async function aggiornaDati() {
   }
 }
 
+async function caricaConfigurazione() {
+  try {
+    // CORRETTO: Percorso allineato all'ESP32 ("config.json")
+    const c = await readJSON("config.json");
+    $("s1").value = c.altezzaSensore;
+    $("s2").value = c.altezzaCisterna;
+    $("s3").value = c.lato1;
+    $("s4").value = c.lato2;
+    $("s5").checked = !!c.modalitaRisparmio;
+    $("s6").checked = !!c.salvaStorico;
+  } catch (e) { setText("errori", e.message); }
+}
 
+async function salvaConfig() {
+  const c = {
+    altezzaSensore: Number($("s1").value),
+    altezzaCisterna: Number($("s2").value),
+    lato1: Number($("s3").value),
+    lato2: Number($("s4").value),
+    modalitaRisparmio: $("s5").checked,
+    salvaStorico: $("s6").checked
+  };
+  
+  if (c.altezzaSensore < c.altezzaCisterna) {
+    return alert("L'altezza del sensore deve essere >= altezza della cisterna.");
+  }
+
+  try {
+    // CORRETTO: Scrive su "config.json"
+    await writeGitHubFile("config.json", JSON.stringify(c, null, 2), "Aggiornamento configurazione cisterna");
+    alert("Configurazione salvata! L'ESP32 la leggerà al prossimo intervallo.");
+    aggiornaDati();
+  } catch (e) { alert("Errore nel salvataggio: " + e.message); }
+}
 
 async function caricaStorico() {
   try {
