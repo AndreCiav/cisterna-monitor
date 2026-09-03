@@ -4,13 +4,13 @@
   "percentualeAcqua": 80.95216,
   "litriAttuali": 14166.63,
   "litriTotali": 17500,
-  "voltBatteria": 2.590923,
+  "voltBatteria": 0,
   "percentualeBatteria": 0,
-  "ultimoAggiornamento": "03/09/2026 12:54:17",
-  "prossimoAggiornamento": "03/09/2026 12:56:17",
+  "ultimoAggiornamento": "03/09/2026 12:56:17",
+  "prossimoAggiornamento": "03/09/2026 12:58:17",
   "modalitaRisparmio": false,
   "salvaStorico": false,
   "erroreUltrasuoni": false,
-  "erroreBatteria": false,
+  "erroreBatteria": true,
   "erroreNTP": false
 }
